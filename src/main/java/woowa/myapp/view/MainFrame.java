@@ -4,12 +4,13 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import woowa.myapp.controller.MainController;
+import woowa.myapp.model.DeckManager;
 
 public class MainFrame extends JFrame {
 
     private JPanel mainContainer;
 
-    public MainFrame() {
+    public MainFrame(DeckManager deckManager) {
 
         setTitle("암기빵");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

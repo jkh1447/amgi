@@ -19,7 +19,6 @@ public class DeckListController {
     private DeckManager deckManager;
 
     private MainController mainController;
-
     private ViewFactory viewFactory;
 
     public final String DELETE_DECK_MESSAGE = "선택한 덱을 삭제하시겠습니까?";
@@ -27,14 +26,13 @@ public class DeckListController {
     public final String DELETE_DECK_ERROR_MESSAGE = "삭제 중 오류 발생: ";
 
     public DeckListController(MainFrame mainFrame, DeckManager deckManager,
-                              MainController mainController,
+                              MainController mainController, AddCardController addCardController,
                               ViewFactory viewFactory) {
         this.mainFrame = mainFrame;
         this.deckManager = deckManager;
         this.viewFactory = viewFactory;
 
         this.mainController = mainController;
-
     }
 
     public MouseListener getDeckNameMouseEvent(JButton deckNameButton, Color defaultColor) {
