@@ -31,10 +31,4 @@ public class ViewFactory {
         return new DeckSettingPanel(mainFrame, deckManager, deck, deckSettingController, mainController);
     }
 
-    public AnalyzeCardPanel getAnalyzeCardPanel(Deck deck, MainController mainController) {
-        return new AnalyzeCardPanel(deck, mainController);
-    }
-
-
-
 }
