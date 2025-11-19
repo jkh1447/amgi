@@ -36,6 +36,7 @@ public class DeckScreenPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         addDeckButton = new JButton("덱 추가");
+        addDeckButtonEvent(addDeckButton);
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
