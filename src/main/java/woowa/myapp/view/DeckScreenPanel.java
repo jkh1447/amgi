@@ -43,5 +43,9 @@ public class DeckScreenPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-
+    void addDeckButtonEvent(JButton addDeckButton) {
+        addDeckButton.addActionListener(e -> {
+            deckScreenController.getAddDeckButtonEvent(deckManager, mainFrame, deckListPanel);
+        });
+    }
 }
