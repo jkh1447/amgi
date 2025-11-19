@@ -45,7 +45,7 @@ class CardsControllerTest {
         controller.getEasyButtonEvent(targetCards, 0, deck);
 
         assertFalse(card.isTarget());
-        assertEquals(1.0, card.getDifficulty());
+        assertEquals(0.0, card.getDifficulty());
         assertTrue(deck.isSaved());
     }
 

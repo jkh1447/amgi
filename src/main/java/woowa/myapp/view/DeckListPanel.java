@@ -142,5 +142,7 @@ public class DeckListPanel extends JPanel {
         });
     }
 
-
+    void addAnalyzeButtonEvent(JButton analyzeButton, Deck deck) {
+        analyzeButton.addActionListener(e -> {deckListController.getAnalyzeButtonEvent(deck);});
+    }
 }
