@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import woowa.myapp.model.Deck;
 import woowa.myapp.model.DeckManager;
 import woowa.myapp.view.AddCardPanel;
+import woowa.myapp.view.AnalyzeCardPanel;
 import woowa.myapp.view.CardsPanel;
 import woowa.myapp.view.DeckListPanel;
 import woowa.myapp.view.DeckSettingPanel;
@@ -72,6 +73,10 @@ public class DeckListController {
 
     public void getSettingButtonEvent(Deck deck) {
         mainFrame.setPanel(viewFactory.getDeckSettingPanel(mainFrame, deckManager, deck, deckSettingController, mainController));
+    }
+
+    public void getAnalyzeButtonEvent(Deck deck) {
+        mainFrame.setPanel(viewFactory.getAnalyzeCardPanel(deck, mainController));
     }
 
     public void getDeleteButtonEvent(List<Deck> decks, Deck deck, DeckListPanel deckListPanel) {

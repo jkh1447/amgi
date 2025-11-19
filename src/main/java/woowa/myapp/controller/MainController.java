@@ -1,6 +1,7 @@
 package woowa.myapp.controller;
 
 import javax.swing.JPanel;
+import woowa.myapp.PresetDeckGenerator;
 import woowa.myapp.model.DeckManager;
 import woowa.myapp.view.DeckListPanel;
 import woowa.myapp.view.DeckScreenPanel;
@@ -44,11 +45,17 @@ public class MainController {
         this.deckListPanel = viewFactory.getDeckListPanel(deckManager, mainFrame, deckListController);
         this.deckScreenPanel = viewFactory.getDeckScreenPanel(mainFrame, deckManager, deckListPanel, deckScreenController);
 
+         PresetDeckGenerator.addEssentialVocabularyDeck(deckManager);
+        PresetDeckGenerator.addChineseDeck(deckManager);
+        PresetDeckGenerator.addJapaneseDeck(deckManager);
+        PresetDeckGenerator.addITDeck(deckManager);
+
     }
 
     public void getMainButtonEvent() {
         mainFrame.setPanel(deckScreenPanel);
     }
+
 
 
 }
