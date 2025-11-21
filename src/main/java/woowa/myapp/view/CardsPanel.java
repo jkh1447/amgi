@@ -1,18 +1,19 @@
 package woowa.myapp.view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+
 import woowa.myapp.controller.CardsController;
 import woowa.myapp.controller.MainController;
 import woowa.myapp.model.DeckManager;
@@ -32,6 +33,12 @@ public class CardsPanel extends JPanel {
     private JLabel frontLabel;
     private JLabel backLabel;
 
+    private JScrollPane frontScrollPane;
+    private JScrollPane backScrollPane;
+
+    private JPanel cardPanel;      // front/back 패널 묶음
+    private CardLayout cardLayout;  // front/back 전환용
+
     private JButton showAnswerButton;
     private JButton easyButton;
     private JButton mediumButton;
@@ -41,19 +48,17 @@ public class CardsPanel extends JPanel {
     private JPanel buttonPanel;
 
     private final String FONT = "SansSerif";
-
     private int currentIndex = 0;
-
     private final String TARGET_CARD_EMPTY_MESSAGE = "모든 카드를 다 외웠어요!";
 
-    public CardsPanel(Deck deck, DeckManager deckManager, MainFrame mainFrame, CardsController cardsController, MainController mainController) {
+    public CardsPanel(Deck deck, DeckManager deckManager, MainFrame mainFrame,
+                      CardsController cardsController, MainController mainController) {
+
         this.deckManager = deckManager;
         this.mainFrame = mainFrame;
-
         this.cardsController = cardsController;
         this.mainController = mainController;
 
-        //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
@@ -61,70 +66,71 @@ public class CardsPanel extends JPanel {
                 .filter(Card::isTarget)
                 .collect(Collectors.toList());
 
-        // 앞면
         frontLabel = new JLabel("", SwingConstants.CENTER);
         frontLabel.setFont(new Font(FONT, Font.BOLD, 22));
         frontLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        frontScrollPane = new JScrollPane(frontLabel);
+        frontScrollPane.setBorder(null);
+        frontScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        // 뒷면
         backLabel = new JLabel("", SwingConstants.CENTER);
         backLabel.setFont(new Font(FONT, Font.PLAIN, 18));
         backLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backLabel.setVisible(false);
+        backScrollPane = new JScrollPane(backLabel);
+        backScrollPane.setBorder(null);
+        backScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        // 정답 버튼
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+        cardPanel.add(frontScrollPane, "FRONT");
+        cardPanel.add(backScrollPane, "BACK");
+
+        add(cardPanel, BorderLayout.CENTER);
+
         showAnswerButton = new JButton("정답 보기");
         showAnswerButton.setFont(new Font(FONT, Font.BOLD, 16));
-        showAnswerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addShowAnswerButtonEvent(showAnswerButton);
 
-        // 메인 버튼
         mainButton = new JButton("메인으로");
         mainButton.setFont(new Font(FONT, Font.BOLD, 16));
-        mainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addMainButtonEvent(mainButton);
 
-        // 쉬움 버튼
         easyButton = new JButton("쉬움");
         easyButton.setFont(new Font(FONT, Font.BOLD, 16));
-        easyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addEasyButtonEvent(easyButton, deck);
 
-        // 보통 버튼
         mediumButton = new JButton("보통");
         mediumButton.setFont(new Font(FONT, Font.BOLD, 16));
-        mediumButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addMediumButtonEvent(mediumButton, deck);
 
-        // 어려움 버튼
         hardButton = new JButton("어려움");
         hardButton.setFont(new Font(FONT, Font.BOLD, 16));
-        hardButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addHardButtonEvent(hardButton, deck);
 
         // 버튼 패널
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         buttonPanel.add(mainButton);
-        if(!targetCards.isEmpty()) buttonPanel.add(showAnswerButton);
-
-//        add(createRatioPanel(frontLabel, 3));
-//        add(createRatioPanel(backLabel, 5));
-//        add(createRatioPanel(buttonPanel, 2));
-
-        add(frontLabel, BorderLayout.NORTH);
-
-        add(backLabel, BorderLayout.CENTER);
+        if (!targetCards.isEmpty()) {
+            buttonPanel.add(showAnswerButton);
+        }
 
         add(buttonPanel, BorderLayout.SOUTH);
 
         // 첫 카드 표시
         showCurrentCard();
-
     }
 
+
     private void onShowAnswer() {
-        backLabel.setVisible(true);
+        cardLayout.show(cardPanel, "BACK"); // back 화면으로 전환
+
+        Card card = targetCards.get(currentIndex);
+
+        String combined = "<html><div style='text-align:center; width:350px;'>"
+                + card.getFront() + "<br><br>" + card.getBack() + "</div></html>";
+        backLabel.setText(combined);
+        backScrollPane.setVisible(true);
+
         buttonPanel.removeAll();
         buttonPanel.add(easyButton);
         buttonPanel.add(mediumButton);
@@ -134,34 +140,29 @@ public class CardsPanel extends JPanel {
     }
 
     private void onAgain() {
-        // target 그대로 두고 다음 카드로 넘어감
         nextCard(false);
     }
 
     private void nextCard(boolean isEasy) {
-        // target이 false인 카드 제외하고 리스트 갱신
         targetCards = targetCards.stream()
                 .filter(Card::isTarget)
                 .collect(Collectors.toList());
 
         if (targetCards.isEmpty()) {
             frontLabel.setText(TARGET_CARD_EMPTY_MESSAGE);
+            cardLayout.show(cardPanel, "FRONT");
 
-            add(mainButton, BorderLayout.CENTER);
-
-            backLabel.setText("");
-            backLabel.setVisible(false);
             buttonPanel.removeAll();
+            buttonPanel.add(mainButton);
             buttonPanel.revalidate();
             buttonPanel.repaint();
             return;
         }
 
-        if(!isEasy) {
+        if (!isEasy) {
             currentIndex = (currentIndex + 1) % targetCards.size();
-        }
-        else {
-            if(currentIndex == targetCards.size()) {
+        } else {
+            if (currentIndex == targetCards.size()) {
                 currentIndex = 0;
             }
         }
@@ -172,14 +173,21 @@ public class CardsPanel extends JPanel {
     private void showCurrentCard() {
         if (targetCards.isEmpty()) {
             frontLabel.setText(TARGET_CARD_EMPTY_MESSAGE);
-            add(mainButton, BorderLayout.CENTER);
+            cardLayout.show(cardPanel, "FRONT");
             return;
         }
 
         Card card = targetCards.get(currentIndex);
-        frontLabel.setText("<html><div style='text-align:center;'>" + card.getFront() + "</div></html>");
-        backLabel.setText("<html><div style='text-align:center;'>" + card.getBack() + "</div></html>");
-        backLabel.setVisible(false);
+
+        String frontHTML = "<html><div style='text-align:center; width:350px;'>"
+                + card.getFront() + "</div></html>";
+        String backHTML = "<html><div style='text-align:center; width:350px;'>"
+                + card.getBack() + "</div></html>";
+
+        frontLabel.setText(frontHTML);
+        backLabel.setText(backHTML);
+
+        cardLayout.show(cardPanel, "FRONT"); // 항상 FRONT로 시작
 
         buttonPanel.removeAll();
         buttonPanel.add(showAnswerButton);
@@ -188,35 +196,35 @@ public class CardsPanel extends JPanel {
         buttonPanel.repaint();
     }
 
-    void addShowAnswerButtonEvent(JButton showAnswerButton) {
-        showAnswerButton.addActionListener(e -> onShowAnswer());
+    // =====================================================
+    // 이벤트 등록
+    // =====================================================
+    void addShowAnswerButtonEvent(JButton btn) {
+        btn.addActionListener(e -> onShowAnswer());
     }
 
-    void addEasyButtonEvent(JButton easyButton, Deck deck) {
-        easyButton.addActionListener(e -> {
+    void addEasyButtonEvent(JButton btn, Deck deck) {
+        btn.addActionListener(e -> {
             cardsController.getEasyButtonEvent(targetCards, currentIndex, deck);
             nextCard(true);
         });
     }
 
-    void addMediumButtonEvent(JButton mediumButton, Deck deck) {
-        mediumButton.addActionListener(e -> {
+    void addMediumButtonEvent(JButton btn, Deck deck) {
+        btn.addActionListener(e -> {
             onAgain();
             cardsController.getMediumButtonEvent(targetCards, currentIndex, deck);
         });
     }
 
-    void addHardButtonEvent(JButton hardButton, Deck deck) {
-        hardButton.addActionListener(e -> {
+    void addHardButtonEvent(JButton btn, Deck deck) {
+        btn.addActionListener(e -> {
             onAgain();
             cardsController.getHardButtonEvent(targetCards, currentIndex, deck);
         });
     }
 
-    void addMainButtonEvent(JButton mainButton) {
-        mainButton.addActionListener(e -> {
-            mainController.getMainButtonEvent();
-        });
+    void addMainButtonEvent(JButton btn) {
+        btn.addActionListener(e -> mainController.getMainButtonEvent());
     }
-
 }

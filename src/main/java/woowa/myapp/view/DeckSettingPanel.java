@@ -29,6 +29,9 @@ public class DeckSettingPanel extends JPanel {
     private MainFrame mainFrame;
     private JPanel listPanel;
 
+    JCheckBox deleteAllCheck;
+    JCheckBox targetAllCheck;
+
     private DeckSettingController deckSettingController;
     private MainController mainController;
 
@@ -76,11 +79,11 @@ public class DeckSettingPanel extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
 
         // 삭제 체크박스
-        JCheckBox deleteAllCheck = new JCheckBox("삭제");
+        deleteAllCheck = new JCheckBox("삭제");
         addDeleteAllCheckBoxEvent(deleteAllCheck);
 
         // 공부할 내용 체크박스
-        JCheckBox targetAllCheck = new JCheckBox("공부할 내용");
+        targetAllCheck = new JCheckBox("공부할 내용");
         addTargetAllCheckBoxEvent(targetAllCheck);
 
         headerPanel.add(deleteAllCheck, BorderLayout.WEST);
@@ -108,6 +111,7 @@ public class DeckSettingPanel extends JPanel {
         checkBoxes.clear();
         deleteBoxes.clear();
 
+        boolean isNotAllChecked = false;
         for (Card card : deck.getCards()) {
             JPanel cardPanel = new JPanel(new BorderLayout());
             cardPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -118,15 +122,23 @@ public class DeckSettingPanel extends JPanel {
             cardPanel.add(deleteCheck, BorderLayout.WEST);
 
             // 가운데: 카드 내용
-            JLabel cardLabel = new JLabel(card.getFront());
+            String front = card.getFront();
+            if (front.length() > 70) front = front.substring(0, 70) + "...";
+            JLabel cardLabel = new JLabel(front);
             cardPanel.add(cardLabel, BorderLayout.CENTER);
 
             // 오른쪽: target 체크박스
+            if (!card.isTarget()) isNotAllChecked = true;
             JCheckBox targetCheck = new JCheckBox("", card.isTarget());
             checkBoxes.add(targetCheck);
             cardPanel.add(targetCheck, BorderLayout.EAST);
 
             listPanel.add(cardPanel);
+        }
+
+        // 공부할 내용 체크박스가 모두 체크되어있을 시 전체체크박스 체크
+        if (!isNotAllChecked) {
+            targetAllCheck.setSelected(true);
         }
 
         listPanel.revalidate();
@@ -142,7 +154,6 @@ public class DeckSettingPanel extends JPanel {
             deckSettingController.getDeleteButtonEvent(deleteBoxes, this, deck);
             refreshList();
         });
-
     }
 
     void addMainButtonEvent(JButton mainButton) {
