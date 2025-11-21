@@ -46,6 +46,7 @@ public class CardsPanel extends JPanel {
     private JButton mainButton;
 
     private JPanel buttonPanel;
+    private JPanel upperPanel;
 
     private final String FONT = "SansSerif";
     private int currentIndex = 0;
@@ -62,6 +63,18 @@ public class CardsPanel extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
+        // 메인버튼을 위한 패널
+        upperPanel = new JPanel();
+        upperPanel.setLayout(new BorderLayout());
+
+        mainButton = new JButton("메인으로");
+        mainButton.setFont(new Font(FONT, Font.BOLD, 16));
+        addMainButtonEvent(mainButton);
+
+        upperPanel.add(mainButton,  BorderLayout.WEST);
+        add(upperPanel, BorderLayout.NORTH);
+
+        // 공부할 카드 목록
         targetCards = deck.getCards().stream()
                 .filter(Card::isTarget)
                 .collect(Collectors.toList());
@@ -91,9 +104,6 @@ public class CardsPanel extends JPanel {
         showAnswerButton.setFont(new Font(FONT, Font.BOLD, 16));
         addShowAnswerButtonEvent(showAnswerButton);
 
-        mainButton = new JButton("메인으로");
-        mainButton.setFont(new Font(FONT, Font.BOLD, 16));
-        addMainButtonEvent(mainButton);
 
         easyButton = new JButton("쉬움");
         easyButton.setFont(new Font(FONT, Font.BOLD, 16));
@@ -109,7 +119,6 @@ public class CardsPanel extends JPanel {
 
         // 버튼 패널
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
-        buttonPanel.add(mainButton);
         if (!targetCards.isEmpty()) {
             buttonPanel.add(showAnswerButton);
         }
@@ -122,7 +131,7 @@ public class CardsPanel extends JPanel {
 
 
     private void onShowAnswer() {
-        cardLayout.show(cardPanel, "BACK"); // back 화면으로 전환
+        cardLayout.show(cardPanel, "BACK");
 
         Card card = targetCards.get(currentIndex);
 
@@ -187,18 +196,15 @@ public class CardsPanel extends JPanel {
         frontLabel.setText(frontHTML);
         backLabel.setText(backHTML);
 
-        cardLayout.show(cardPanel, "FRONT"); // 항상 FRONT로 시작
+        cardLayout.show(cardPanel, "FRONT");
 
         buttonPanel.removeAll();
         buttonPanel.add(showAnswerButton);
-        buttonPanel.add(mainButton);
+        // buttonPanel.add(mainButton);
         buttonPanel.revalidate();
         buttonPanel.repaint();
     }
 
-    // =====================================================
-    // 이벤트 등록
-    // =====================================================
     void addShowAnswerButtonEvent(JButton btn) {
         btn.addActionListener(e -> onShowAnswer());
     }
