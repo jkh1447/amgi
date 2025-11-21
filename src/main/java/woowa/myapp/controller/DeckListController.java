@@ -72,7 +72,8 @@ public class DeckListController {
     }
 
     public void getSettingButtonEvent(Deck deck) {
-        mainFrame.setPanel(viewFactory.getDeckSettingPanel(mainFrame, deckManager, deck, deckSettingController, mainController));
+        mainFrame.setPanel(
+                viewFactory.getDeckSettingPanel(mainFrame, deckManager, deck, deckSettingController, mainController));
     }
 
     public void getAnalyzeButtonEvent(Deck deck) {
@@ -82,14 +83,17 @@ public class DeckListController {
     public void getDeleteButtonEvent(List<Deck> decks, Deck deck, DeckListPanel deckListPanel) {
         int confirm = JOptionPane.showConfirmDialog(deckListPanel, DELETE_DECK_MESSAGE, DELETE_DECK_TITLE,
                 JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            decks.remove(deck);
-            try {
-                deckManager.removeDeck(deck);
-                deckManager.saveDeckList();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(deckListPanel, DELETE_DECK_ERROR_MESSAGE + ex.getMessage());
-            }
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        decks.remove(deck);
+        try {
+            deckManager.removeDeck(deck);
+            deckManager.saveDeckList();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(deckListPanel, DELETE_DECK_ERROR_MESSAGE + ex.getMessage());
         }
     }
 

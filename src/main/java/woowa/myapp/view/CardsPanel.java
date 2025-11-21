@@ -1,5 +1,6 @@
 package woowa.myapp.view;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -7,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -52,9 +54,8 @@ public class CardsPanel extends JPanel {
         this.mainController = mainController;
 
         //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
         targetCards = deck.getCards().stream()
                 .filter(Card::isTarget)
@@ -110,15 +111,12 @@ public class CardsPanel extends JPanel {
 //        add(createRatioPanel(frontLabel, 3));
 //        add(createRatioPanel(backLabel, 5));
 //        add(createRatioPanel(buttonPanel, 2));
-        c.gridy = 0;
-        c.weighty = 3;
-        add(frontLabel, c);
-        c.gridy = 1;
-        c.weighty = 5;
-        add(backLabel, c);
-        c.gridy = 2;
-        c.weighty = 2;
-        add(buttonPanel, c);
+
+        add(frontLabel, BorderLayout.NORTH);
+
+        add(backLabel, BorderLayout.CENTER);
+
+        add(buttonPanel, BorderLayout.SOUTH);
 
         // 첫 카드 표시
         showCurrentCard();
@@ -149,11 +147,7 @@ public class CardsPanel extends JPanel {
         if (targetCards.isEmpty()) {
             frontLabel.setText(TARGET_CARD_EMPTY_MESSAGE);
 
-            GridBagConstraints c = new GridBagConstraints();
-            c.fill = GridBagConstraints.NONE;
-            c.gridy = 2;
-            c.anchor = GridBagConstraints.CENTER;
-            add(mainButton, c);
+            add(mainButton, BorderLayout.CENTER);
 
             backLabel.setText("");
             backLabel.setVisible(false);
@@ -178,11 +172,7 @@ public class CardsPanel extends JPanel {
     private void showCurrentCard() {
         if (targetCards.isEmpty()) {
             frontLabel.setText(TARGET_CARD_EMPTY_MESSAGE);
-            GridBagConstraints c = new GridBagConstraints();
-            c.fill = GridBagConstraints.NONE;
-            c.gridy = 1;
-            c.anchor = GridBagConstraints.CENTER;
-            add(mainButton, c);
+            add(mainButton, BorderLayout.CENTER);
             return;
         }
 

@@ -37,18 +37,19 @@ public class DeckSettingController {
     public void getDeleteButtonEvent(List<JCheckBox> deleteBoxes, DeckSettingPanel deckSettingPanel, Deck deck) {
         int confirm = JOptionPane.showConfirmDialog(deckSettingPanel, DELETE_CARD_MESSAGE, DELETE_CARD_TITLE,
                 JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            for (int i = deleteBoxes.size() - 1; i >= 0; i--) {
-                if (deleteBoxes.get(i).isSelected()) {
-                    deck.getCards().remove(i);
-                }
+
+        if(confirm !=  JOptionPane.YES_OPTION) return;
+
+        for (int i = deleteBoxes.size() - 1; i >= 0; i--) {
+            if (deleteBoxes.get(i).isSelected()) {
+                deck.getCards().remove(i);
             }
-            try {
-                deck.saveDeckData();
-                JOptionPane.showMessageDialog(deckSettingPanel, DELETE_CARD_SUCCESS_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(deckSettingPanel, DELETE_CARD_ERROR_MESSAGE + ex.getMessage());
-            }
+        }
+        try {
+            deck.saveDeckData();
+            JOptionPane.showMessageDialog(deckSettingPanel, DELETE_CARD_SUCCESS_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(deckSettingPanel, DELETE_CARD_ERROR_MESSAGE + ex.getMessage());
         }
     }
 

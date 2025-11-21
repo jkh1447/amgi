@@ -45,11 +45,6 @@ public class MainController {
         this.deckListPanel = viewFactory.getDeckListPanel(deckManager, mainFrame, deckListController);
         this.deckScreenPanel = viewFactory.getDeckScreenPanel(mainFrame, deckManager, deckListPanel, deckScreenController);
 
-//        PresetDeckGenerator.addEssentialVocabularyDeck(deckManager);
-//        PresetDeckGenerator.addChineseDeck(deckManager);
-//        PresetDeckGenerator.addJapaneseDeck(deckManager);
-//        PresetDeckGenerator.addITDeck(deckManager);
-
     }
 
     public void getMainButtonEvent() {
