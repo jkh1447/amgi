@@ -1,7 +1,9 @@
 package woowa.myapp.controller;
 
+import java.util.List;
 import javax.swing.JPanel;
 import woowa.myapp.PresetDeckGenerator;
+import woowa.myapp.model.Deck;
 import woowa.myapp.model.DeckManager;
 import woowa.myapp.view.DeckListPanel;
 import woowa.myapp.view.DeckScreenPanel;
@@ -42,7 +44,8 @@ public class MainController {
                 addCardController, cardsController, viewFactory);
 
         // panel
-        this.deckListPanel = viewFactory.getDeckListPanel(deckManager, mainFrame, deckListController);
+        List<Deck> decks = deckManager.getDecks();
+        this.deckListPanel = viewFactory.getDeckListPanel(deckManager, mainFrame, deckListController, decks);
         this.deckScreenPanel = viewFactory.getDeckScreenPanel(mainFrame, deckManager, deckListPanel, deckScreenController);
 
     }

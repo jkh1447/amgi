@@ -1,5 +1,6 @@
 package woowa.myapp.controller;
 
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import woowa.myapp.model.Deck;
@@ -29,7 +30,8 @@ public class DeckScreenController {
 
             deckManager.saveDeckList();
 
-            deckListPanel.refresh();
+            List<Deck> decks = deckManager.getDecks();
+            deckListPanel.refresh(decks);
         }
     }
 

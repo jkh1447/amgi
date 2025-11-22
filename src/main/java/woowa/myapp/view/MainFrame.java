@@ -10,11 +10,14 @@ public class MainFrame extends JFrame {
 
     private JPanel mainContainer;
 
+    private final int FRAME_WIDTH = 800;
+    private final int FRAME_HEIGHT = 600;
+
     public MainFrame(DeckManager deckManager) {
 
         setTitle("암기빵");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setResizable(false);
         setLocationRelativeTo(null); // 화면 중앙 배치
         setLayout(new BorderLayout());

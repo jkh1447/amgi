@@ -1,5 +1,6 @@
 package woowa.myapp.view;
 
+import java.util.List;
 import woowa.myapp.controller.AddCardController;
 import woowa.myapp.controller.CardsController;
 import woowa.myapp.controller.DeckListController;
@@ -11,8 +12,8 @@ import woowa.myapp.model.DeckManager;
 
 public class ViewFactory {
 
-    public DeckListPanel getDeckListPanel(DeckManager deckManager, MainFrame mainFrame, DeckListController deckListController) {
-        return new DeckListPanel(deckManager, mainFrame, deckListController);
+    public DeckListPanel getDeckListPanel(DeckManager deckManager, MainFrame mainFrame, DeckListController deckListController, List<Deck> decks) {
+        return new DeckListPanel(deckManager, mainFrame, deckListController, decks);
     }
 
     public DeckScreenPanel getDeckScreenPanel(MainFrame mainFrame, DeckManager deckManager, DeckListPanel deckListPanel, DeckScreenController deckScreenController) {
