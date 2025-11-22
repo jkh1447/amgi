@@ -21,21 +21,22 @@ public class DeckListPanel extends JPanel {
     private MainFrame mainFrame;
     private DeckListController deckListController;
 
-    public DeckListPanel(DeckManager deckManager, MainFrame mainFrame, DeckListController deckListController) {
+    private final int DECK_NAME_LIMIT = 15;
+
+    public DeckListPanel(DeckManager deckManager, MainFrame mainFrame, DeckListController deckListController, List<Deck> decks) {
         this.deckManager = deckManager;
         this.mainFrame = mainFrame;
         this.deckListController = deckListController;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        refresh();
+        refresh(decks);
     }
 
-    public void refresh() {
+    public void refresh(List<Deck> decks) {
         removeAll();
 
         // 새로 고침할 때마다 새로 받아와야 함.
-        List<Deck> decks = deckManager.getDecks();
         for (Deck deck : decks) {
 
             // 각 덱을 표현할 panel
@@ -113,8 +114,8 @@ public class DeckListPanel extends JPanel {
 
     public String getDeckPanelName(Deck deck) {
         String name = deck.getName();
-        if (name.length() > 15) {
-            name = name.substring(0, 15) + "...";
+        if (name.length() > DECK_NAME_LIMIT) {
+            name = name.substring(0, DECK_NAME_LIMIT) + "...";
         }
         return name;
     }
@@ -138,7 +139,7 @@ public class DeckListPanel extends JPanel {
     void addDeleteButtonEvent(JButton deleteButton, List<Deck> decks, Deck deck, DeckListPanel deckListPanel) {
         deleteButton.addActionListener(e -> {
             deckListController.getDeleteButtonEvent(decks, deck, deckListPanel);
-            refresh();
+            refresh(decks);
         });
     }
 

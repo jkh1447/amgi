@@ -10,7 +10,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import woowa.myapp.controller.DeckSettingController;
@@ -35,6 +34,8 @@ public class DeckSettingPanel extends JPanel {
     private DeckSettingController deckSettingController;
     private MainController mainController;
 
+    private final int CARD_FRONT_LIMIT = 70;
+
     public DeckSettingPanel(MainFrame mainFrame, DeckManager deckManager, Deck deck, DeckSettingController deckSettingController, MainController mainController) {
         this.deckManager = deckManager;
         this.deck = deck;
@@ -51,7 +52,7 @@ public class DeckSettingPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // 상단 패널
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,  10, 5));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
         // 저장 버튼
         JButton saveButton = new JButton("저장");
@@ -111,7 +112,9 @@ public class DeckSettingPanel extends JPanel {
         checkBoxes.clear();
         deleteBoxes.clear();
 
-        boolean isNotAllChecked = false;
+        boolean isNotAllTargetChecked = false;
+        boolean isNotAllDeleteChecked = false;
+
         for (Card card : deck.getCards()) {
             JPanel cardPanel = new JPanel(new BorderLayout());
             cardPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -123,30 +126,59 @@ public class DeckSettingPanel extends JPanel {
 
             // 가운데: 카드 내용
             String front = card.getFront();
-            if (front.length() > 70) front = front.substring(0, 70) + "...";
+            if (front.length() > CARD_FRONT_LIMIT) front = front.substring(0, CARD_FRONT_LIMIT) + "...";
             JLabel cardLabel = new JLabel(front);
             cardPanel.add(cardLabel, BorderLayout.CENTER);
 
             // 오른쪽: target 체크박스
-            if (!card.isTarget()) isNotAllChecked = true;
             JCheckBox targetCheck = new JCheckBox("", card.isTarget());
             checkBoxes.add(targetCheck);
             cardPanel.add(targetCheck, BorderLayout.EAST);
 
+            // 개별 체크박스 이벤트 등록
+            targetCheck.addActionListener(e -> updateTargetAllCheckBox());
+            deleteCheck.addActionListener(e -> updateDeleteAllCheckBox());
+
+            if (!targetCheck.isSelected()) isNotAllTargetChecked = true;
+            if (!deleteCheck.isSelected()) isNotAllDeleteChecked = true;
+
             listPanel.add(cardPanel);
         }
 
-        // 공부할 내용 체크박스가 모두 체크되어있을 시 전체체크박스 체크
-        if (!isNotAllChecked) {
-            targetAllCheck.setSelected(true);
-        }
+        // 전체 체크박스 상태 초기화
+        targetAllCheck.setSelected(!isNotAllTargetChecked);
+        deleteAllCheck.setSelected(!isNotAllDeleteChecked);
 
         listPanel.revalidate();
         listPanel.repaint();
     }
 
+    // 전체 target 체크박스 갱신
+    private void updateTargetAllCheckBox() {
+        boolean allChecked = true;
+        for (JCheckBox cb : checkBoxes) {
+            if (!cb.isSelected()) {
+                allChecked = false;
+                break;
+            }
+        }
+        targetAllCheck.setSelected(allChecked);
+    }
+
+    // 전체 delete 체크박스 갱신
+    private void updateDeleteAllCheckBox() {
+        boolean allChecked = true;
+        for (JCheckBox cb : deleteBoxes) {
+            if (!cb.isSelected()) {
+                allChecked = false;
+                break;
+            }
+        }
+        deleteAllCheck.setSelected(allChecked);
+    }
+
     void addSaveButtonEvent(JButton saveButton) {
-        saveButton.addActionListener(e -> {deckSettingController.getSaveButtonEvent(deck, checkBoxes, this);});
+        saveButton.addActionListener(e -> deckSettingController.getSaveButtonEvent(deck, checkBoxes, this));
     }
 
     void addDeleteButtonEvent(JButton deleteButton) {
@@ -157,15 +189,21 @@ public class DeckSettingPanel extends JPanel {
     }
 
     void addMainButtonEvent(JButton mainButton) {
-        mainButton.addActionListener(e -> {mainController.getMainButtonEvent();});
+        mainButton.addActionListener(e -> mainController.getMainButtonEvent());
     }
 
     void addDeleteAllCheckBoxEvent(JCheckBox deleteAllCheckBox) {
-        deleteAllCheckBox.addActionListener(e -> {deckSettingController.getDeleteAllCheckBoxEvent(deleteBoxes, deleteAllCheckBox);});
+        deleteAllCheckBox.addActionListener(e -> {
+            boolean selected = deleteAllCheckBox.isSelected();
+            for (JCheckBox cb : deleteBoxes) cb.setSelected(selected);
+        });
     }
 
     void addTargetAllCheckBoxEvent(JCheckBox targetAllCheckBox) {
-        targetAllCheckBox.addActionListener(e -> {deckSettingController.getTargetAllCheckBoxEvent(checkBoxes, targetAllCheckBox);});
+        targetAllCheckBox.addActionListener(e -> {
+            boolean selected = targetAllCheckBox.isSelected();
+            for (JCheckBox cb : checkBoxes) cb.setSelected(selected);
+        });
     }
 
 }
