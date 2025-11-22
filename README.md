@@ -23,6 +23,11 @@
 
 어떤 카드를 어려워하고 있는지 막대 그래프로 확인할 수 있습니다.
 
+### 실행파일
+[암기빵](https://github.com/jkh1447/amgi/releases/download/v1.0/amgibbang.jar)
+
+<br>
+
 ## 구현할 기능 목록
 
 ### 메인화면
