@@ -2,6 +2,27 @@
 
 앞면과 뒷면을 가진 플래시카드형식의 암기 프로그램입니다.
 
+## 화면 구성
+
+### 메인화면(덱 목록)
+<img width="786" height="593" alt="image" src="https://github.com/user-attachments/assets/3b6ef23e-6080-41f7-8fed-de49017c05e7" />
+
+### 학습화면
+<img width="786" height="593" alt="image" src="https://github.com/user-attachments/assets/924f8c26-6346-4d87-9d8d-ca8465353c9b" />
+
+### 카드 추가화면
+<img width="786" height="593" alt="image" src="https://github.com/user-attachments/assets/3ff2631e-a106-4e8a-8b8b-c76e3449c553" />
+
+### 설정화면
+<img width="786" height="593" alt="image" src="https://github.com/user-attachments/assets/79481f22-2f31-4be7-9c1b-475cd02eddee" />
+
+어떤 카드를 학습할 지 설정할 수 있습니다.
+
+### 통계화면
+<img width="786" height="593" alt="image" src="https://github.com/user-attachments/assets/c41626c9-e471-498e-b20c-1a855f8062b1" />
+
+어떤 카드를 어려워하고 있는지 막대 그래프로 확인할 수 있습니다.
+
 ## 구현할 기능 목록
 
 ### 메인화면
